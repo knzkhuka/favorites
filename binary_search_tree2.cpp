@@ -134,6 +134,7 @@ struct bst{
         tmp->rig->par = n;
         tmp->lef->par = n;
         tmp->par->lef = n;
+        delete tmp;
         return true;
       }
       else if(v < tmp->val){
