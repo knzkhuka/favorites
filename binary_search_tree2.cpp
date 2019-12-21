@@ -77,6 +77,7 @@ struct bst{
     return false;
   }
   bool erase(T v){
+    // バ　グ　だ　ら　け　に　き　あ　く　ん　笑
     auto tmp = root;
     auto max_node = [](node<T>* cur){
       while(cur->rig!=nullptr){
