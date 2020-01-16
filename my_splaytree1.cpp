@@ -4,10 +4,14 @@ using namespace std;
 template<class T>
 struct node{
   T val;
+  T acml;
   size_t sz;
   node<T> *parent,*left,*right;
   node():sz(1),parent(nullptr),left(nullptr),right(nullptr){}
-  node(T const& v):val(v),sz(1),parent(nullptr),left(nullptr),right(nullptr){}
+  node(T const& v):val(v),acml(v),sz(1),parent(nullptr),left(nullptr),right(nullptr){}
+  T op(T const& lhs,T const& rhs){
+    return lhs<=rhs?lhs:rhs;
+  }
   int state(){
     if(this->parent==nullptr)return 0;
     if(this->parent->left==this)return 1;
@@ -54,11 +58,14 @@ struct node{
   }
   void update(){
     this->sz = 1;
+    this->acml = this->val;
     if(this->left){
       this->sz += this->left->sz;
+      this->acml = op(this->acml,this->left->acml);
     }
     if(this->right){
       this->sz += this->right->sz;
+      this->acml = op(this->acml,this->right->acml);
     }
   }
 };
@@ -165,7 +172,7 @@ struct splay_tree{
     root = tmp;
     return root->val == v;
   }
-  T operator[](int k){
+  node<T>* operator[](int k){
     assert(k < sz);
     node<T>* tmp = root;
     while(1){
@@ -176,7 +183,7 @@ struct splay_tree{
       if(k==lsz){
         tmp->splay();
         root = tmp;
-        return tmp->val;
+        return tmp;
       }
       if(k>lsz){
         tmp = tmp->right;
@@ -207,7 +214,8 @@ signed main(){
     }
     else if(com==4){
       int x;cin>>x;
-      cout<<sp[x]<<endl;
+      auto kth_node = sp[x];
+      cout<<kth_node->val<<" "<<kth_node->acml<<endl;
     }
     else{
       sp.dump();
