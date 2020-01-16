@@ -214,7 +214,7 @@ struct splay_vector{
     }
     root = &vec[n-1];
   }
-  node<T>* get(size_t k){
+  node<T>* operator[](size_t k){
     assert(k<sz);
     node<T>* tmp = root;
     while(1){
@@ -245,12 +245,12 @@ signed test2(){
     int com;cin>>com;
     if(com==0){
       int x;cin>>x;
-      sp.get(idx)->val = x;
+      sp[idx]->val = x;
       idx++;
     }
     else if(com==1){
       int p;cin>>p;
-      cout<<sp.get(p)->val<<endl;
+      cout<<sp[p]->val<<endl;
     }
     else{
       idx--;
