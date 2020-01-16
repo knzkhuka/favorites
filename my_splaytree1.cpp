@@ -10,7 +10,7 @@ struct node{
   node():sz(1),parent(nullptr),left(nullptr),right(nullptr){}
   node(T const& v):val(v),acml(v),sz(1),parent(nullptr),left(nullptr),right(nullptr){}
   T op(T const& lhs,T const& rhs){
-    return lhs<=rhs?lhs:rhs;
+    return lhs+rhs;
   }
   int state(){
     if(this->parent==nullptr)return 0;
@@ -99,6 +99,9 @@ struct splay_tree{
     dump_dfs2(root);
     cout<<endl;
   }
+  T fold_all(){
+    return root->acml;
+  }
   bool empty(){return sz==0;}
   node<T>* find_node(T const& v){
     node<T>* tmp = root;
@@ -124,7 +127,7 @@ struct splay_tree{
     if(tmp->val == v)return;
     sz++;
     node<T>* add = new node<T>(v);
-    if(tmp->val < v){
+    if(tmp->val <= v){
       tmp->right = add;
     }
     if(tmp->val > v){
@@ -193,7 +196,7 @@ struct splay_tree{
   }
 };
 
-signed main(){
+signed test1(){
 
   splay_tree<int> sp;
   int q;
@@ -223,4 +226,25 @@ signed main(){
     }
   }
 
+}
+
+void solve(){
+  // https://onlinejudge.u-aizu.ac.jp/courses/lesson/1/ALDS1/4/ALDS1_4_B
+  int n;cin>>n;
+  splay_tree<int> sp;
+  while(n--){
+    int x;cin>>x;
+    sp.insert(x);
+  }
+  int q;cin>>q;
+  int ans{0};
+  while(q--){
+    int x;cin>>x;
+    ans += sp.find(x);
+  }
+  cout<<(ans)<<endl;
+}
+
+signed main(){
+  solve();
 }
