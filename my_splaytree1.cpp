@@ -1,6 +1,9 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+using ll = long long;
+using pll = pair<ll,ll>;
+
 template<class T>
 struct node{
   T val;
@@ -10,7 +13,7 @@ struct node{
   node():sz(1),parent(nullptr),left(nullptr),right(nullptr){}
   node(T const& v):val(v),acml(v),sz(1),parent(nullptr),left(nullptr),right(nullptr){}
   T op(T const& lhs,T const& rhs){
-    return lhs+rhs;
+    return lhs;
   }
   int state(){
     if(this->parent==nullptr)return 0;
@@ -228,7 +231,7 @@ signed test1(){
 
 }
 
-void solve(){
+void solve1(){
   // https://onlinejudge.u-aizu.ac.jp/courses/lesson/1/ALDS1/4/ALDS1_4_B
   int n;cin>>n;
   splay_tree<int> sp;
@@ -245,6 +248,63 @@ void solve(){
   cout<<(ans)<<endl;
 }
 
+class Rolling_Hash{
+private:
+  ll n;
+  static constexpr ll base1=1007,base2=2009;
+  static constexpr ll mod1=(1e9+7),mod2=(1e9+9);
+  vector<ll> hash1,hash2,mpow1,mpow2;
+public:
+  Rolling_Hash(const string& s){
+    n=s.size();
+    hash1.resize(n+1,0);
+    hash2.resize(n+1,0);
+    mpow1.resize(n+1,1);
+    mpow2.resize(n+1,1);
+    for(ll i=0;i<n;++i){
+      hash1[i+1] = (hash1[i]*base1+s[i])%mod1;
+      hash2[i+1] = (hash2[i]*base2+s[i])%mod2;
+      mpow1[i+1] = (mpow1[i]*base1)%mod1;
+      mpow2[i+1] = (mpow2[i]*base2)%mod2;
+    }
+  }
+  auto get(ll l,ll r){
+    ll lefval = hash1[r]-hash1[l]*mpow1[r-l]%mod1;
+    ll rigval = hash2[r]-hash2[l]*mpow2[r-l]%mod2;
+    if(lefval<0)lefval+=mod1;
+    if(rigval<0)rigval+=mod2;
+    return make_pair(lefval,rigval);
+  }
+  auto get_LCP(ll a,ll b){
+    ll len = min( n-a+1,n-b+1 );
+    ll low=0,high=len;
+    while( high-low>1 ){
+      ll mid=(high+low)>>1;
+      if(get(a,a+mid)!=get(b,b+mid))high=mid;
+      else low=mid;
+    }
+    return low;
+  }
+};
+
+void solve2(){
+  //https://onlinejudge.u-aizu.ac.jp/courses/lesson/1/ALDS1/4/ALDS1_4_C
+  int n;
+  cin>>n;
+  splay_tree<pll> sp;
+  while(n--){
+    string com,s;
+    cin>>com>>s;
+    Rolling_Hash roli(s);
+    if(com=="insert"){
+      sp.insert(roli.get(0,s.size()));
+    }
+    else{
+      cout<<(sp.find(roli.get(0,s.size()))?"yes":"no")<<endl;
+    }
+  }
+}
+
 signed main(){
-  solve();
+  solve2();
 }
