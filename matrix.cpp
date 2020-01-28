@@ -76,7 +76,27 @@ struct matrix{
         is >> mat.data[i][j];
     return is;
   }
+  matrix identity_element(size_t n,T add_ide,T pro_ide){
+    vector<vector<T>> identity_element (n,vector<T>(n,add_ide));
+    for(size_t i=0;i<n;++i){
+      identity_element[i][i] = pro_ide;
+    }
+    matrix ide(n);
+    ide.data = identity_element;
+    return ide;
+  }
 };
+template<class T>
+matrix<T> mat_pow(matrix<T> mat,int n,T add_ide,T pro_ide){
+  assert(mat.row == mat.col);
+  matrix<T> result = mat.identity_element(mat.row,add_ide,pro_ide);
+  while(n){
+    if(n&1)result*=mat;
+    mat = mat*mat;
+    n>>=1;
+  }
+  return result;
+}
 
 signed main(){
 
@@ -84,6 +104,6 @@ signed main(){
   cin>>n>>m;
   matrix<int> a(n,m),b(m,n);
   cin>>a>>b;
-  cout<<(a*b)<<endl;
+  a = mat_pow(a,4,0,1);
 
 }
