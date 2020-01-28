@@ -100,10 +100,13 @@ matrix<T> mat_pow(matrix<T> mat,int n,T add_ide,T pro_ide){
 
 signed main(){
 
-  int n,m;
-  cin>>n>>m;
-  matrix<int> a(n,m),b(m,n);
-  cin>>a>>b;
-  a = mat_pow(a,4,0,1);
+  int n;
+  cin>>n;
+  matrix<int> a(n);
+  cin>>a;
+  a = mat_pow(a,2,0,1);
+  cout<<(a)<<endl;
+  a = mat_pow(a,2,0,1);
+  cout<<(a)<<endl;
 
 }
