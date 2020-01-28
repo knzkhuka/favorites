@@ -15,10 +15,10 @@ struct minplus_semiring{
   }
   minplus_semiring& operator += (minplus_semiring const& rhs){
     if(this->value > rhs.value)this->value = rhs.value;
-    return this;
+    return *this;
   }
   minplus_semiring& operator *= (minplus_semiring const& rhs){
-    return this->value += rhs.value;
+    return *this->value += rhs.value;
   }
   friend ostream& operator << (ostream& os,minplus_semiring const& elm){
     return os << elm.value;
@@ -31,9 +31,18 @@ struct minplus_semiring{
 
 signed main(){
 
-  minplus_semiring<int> a,b;
-  cin>>a>>b;
-  cout<<"a+b "<<a+b<<endl;
-  cout<<"a*b "<<a*b<<endl;
+  {
+    minplus_semiring<int> a,b;
+    cin>>a>>b;
+    cout<<"a+b "<<a+b<<endl;
+    cout<<"a*b "<<a*b<<endl;
+  }
+
+  {
+    minplus_semiring<int> a,b,c;
+    cin>>a>>b>>c;
+    a += b*c;
+    cout<<a<<" "<<b<<" "<<c<<endl;
+  }
 
 }
