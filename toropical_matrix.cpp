@@ -33,7 +33,9 @@ struct matrix{
   matrix operator*(matrix const& rhs){
     assert(this->n == rhs.n);
     matrix mat(this->n,add_ide);
-    rep(i,n)rep(j,n)rep(k,n)mat.data[i][j] += (this->data[i][k]*rhs.data[k][j]);
+    mat.add_ide = this->add_ide;
+    mat.pro_ide = this->pro_ide;
+    rep(i,n)rep(j,n)rep(k,n)mat.data.at(i).at(j) += (this->data.at(i).at(k)*rhs.data.at(k).at(j)*pro_ide)+add_ide;
     return mat;
   }
   matrix &operator*=(matrix const& rhs){
@@ -43,7 +45,7 @@ struct matrix{
   friend ostream &operator<<(ostream& os,matrix const& mat){
     rep(i,mat.n){
       rep(j,mat.n){
-        os<<mat.data[i][j]<<(j+1<mat.n?" ":i+1<mat.n?"\n":"");
+        os<<mat.data.at(i).at(j)<<(j+1<mat.n?" ":i+1<mat.n?"\n":"");
       }
     }
     return os;
@@ -53,7 +55,7 @@ struct matrix{
     return is;
   }
   vector<T> &operator[](size_t i){
-    return this->data[i];
+    return this->data.at(i);
   }
 };
 
@@ -64,7 +66,7 @@ struct minplus_semiring{
   minplus_semiring(){}
   minplus_semiring(T v):value(v){}
   minplus_semiring operator + (minplus_semiring const& rhs){
-    return this->value < rhs.value ? this : rhs;
+    return this->value < rhs.value ? *this : rhs;
   }
   minplus_semiring operator * (minplus_semiring const& rhs){
     if(this->value == this->inf)return minplus_semiring(inf);
@@ -91,6 +93,23 @@ struct minplus_semiring{
 
 using myint = minplus_semiring<int>;
 
+signed _main(){
+  int n;
+  cin>>n;
+  matrix<int64_t> mat(n);
+  mat.add_ide = 0;
+  mat.pro_ide = 1;
+  cin>>mat;
+  cout<<endl;
+  cout<<mat<<endl;
+  cout<<endl;
+  mat = mat*mat;
+  cout<<mat<<endl;
+  cout<<endl;
+  mat = mat*mat;
+  cout<<mat<<endl;
+}
+
 signed main(){
 
   int n,m;
@@ -105,10 +124,8 @@ signed main(){
     mat[a][b] = c;
   }
   cout<<(mat)<<endl<<endl;
-  mat *= mat;
-  cout<<mat<<endl<<endl;
-  mat *= mat;
-  cout<<mat<<endl;
+  cout<<(mat*mat)<<endl<<endl;
+  cout<<(mat*mat*mat)<<endl;
 
 
 }
