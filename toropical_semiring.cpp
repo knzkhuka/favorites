@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-constexpr int inf = 1<<28;
+constexpr int inf = numeric_limits<int>::max();
 
 template<class T>
 struct matrix{
@@ -103,6 +103,7 @@ matrix<T> mat_pow(matrix<T> mat,int n,T add_ide,T pro_ide){
 
 template<class T>
 struct minplus_semiring{
+  static constexpr T inf = numeric_limits<T>::max();
   T value;
   minplus_semiring(){}
   minplus_semiring(T v):value(v){}
@@ -110,6 +111,8 @@ struct minplus_semiring{
     return this->value < rhs.value ? *this : rhs;
   }
   minplus_semiring operator * (minplus_semiring const& rhs){
+    if(this->value == this->inf)return minplus_semiring(inf);
+    if(rhs.value == this->inf)return minplus_semiring(inf);
     return minplus_semiring(this->value + rhs.value);
   }
   minplus_semiring& operator += (minplus_semiring const& rhs){
@@ -117,16 +120,18 @@ struct minplus_semiring{
     return *this;
   }
   minplus_semiring& operator *= (minplus_semiring const& rhs){
-    return *this->value += rhs.value;
+    if(rhs.value == inf)this->value = inf;
+    else this->value += rhs.value;
+    return *this;
   }
   friend ostream& operator << (ostream& os,minplus_semiring const& elm){
-    return os << (elm.value>=inf?"_":to_string(elm.value));
+    return os << (elm.value==elm.inf?"_":to_string(elm.value));
   }
   friend istream& operator >> (istream& is,minplus_semiring& elm){
     return is >> elm.value;
   }
 };
-using toropical = minplus_semiring<int64_t>;
+using toropical = minplus_semiring<int>;
 
 signed main(){
 
@@ -143,7 +148,8 @@ signed main(){
     dist[a][b] = c;
   }
 
-  cout<<dist<<endl;
-  cout<< mat_pow(dist,2,toropical(inf),toropical(0)) <<endl;
+  cout<<dist<<endl<<endl;
+  cout<< mat_pow(dist,2,toropical(inf),toropical(0)) <<endl<<endl;
+  cout<< (dist*dist) <<endl;
 
 }
